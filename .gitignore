@@ -32,3 +32,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Claude Code ###
+.claude/
+StudyVault/
+skills-lock.json
