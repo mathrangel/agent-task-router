@@ -38,6 +38,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if(header == null || !header.startsWith("Bearer ")) {
             return null;
         }
-        return null;
+        return header.substring(7);
     }
 }
