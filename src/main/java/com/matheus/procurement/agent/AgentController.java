@@ -16,7 +16,7 @@ public class AgentController {
         this.agentService = agentService;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<Agent>> getAgents() {
         List<Agent> agents = agentService.findAll();
         return ResponseEntity.ok(agents);
@@ -25,10 +25,11 @@ public class AgentController {
     @GetMapping("/{id}")
     public ResponseEntity<Agent> getAgent(@PathVariable UUID id) {
         Optional<Agent> agent = agentService.findById(id);
-        return agent.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return agent.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     };
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<Agent> createAgent(@RequestBody Agent agent) {
         return ResponseEntity.ok(agentService.create(agent));
     };

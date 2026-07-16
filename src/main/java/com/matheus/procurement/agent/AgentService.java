@@ -16,7 +16,6 @@ public class AgentService {
 
     public Agent create(Agent agent) {
         return agentRepository.save(agent);
-
     }
 
     public List<Agent> findAll() {
