@@ -153,3 +153,17 @@ resilience4j.circuitbreaker.instances:
     waitDurationInOpenState: 60s   # tenta de novo após 60s
     slidingWindowSize: 10          # janela de 10 chamadas
 ```
+
+---
+
+## ADR-011 — Redis provisionado antecipadamente, sem implementação atrelada
+
+**Decisão:** Redis foi adicionado ao `docker-compose.yml` como infraestrutura genérica de cache, ainda sem nenhum caso de uso implementado no código.
+
+**Por quê:**
+- Provisionar agora tem custo de fricção quase nulo — um serviço a mais no compose, sem tocar em código existente
+- Destrava o ADR-005 (`agents:active`): quando a implementação do cache de agentes for feita, a infra já está pronta, sem esperar por deploy de infraestrutura no meio do caminho
+- É parte de uma decisão maior de stack (as tecnologias que o projeto vai usar), não um caso isolado de otimização prematura
+
+**Status:** infraestrutura provisionada (docker-compose) · implementação do cache ainda pendente
+**Relacionado:** ADR-005
