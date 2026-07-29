@@ -20,13 +20,13 @@ Não estudas por estudar — estudas para desbloquear a próxima tarefa.
 
 ### O que implementas
 
-- [ ] Entidade `Agent` com campos: `id` (UUID), `name`, `endpointUrl`, `capabilities` (lista de strings), `status` (enum), `maxConcurrency`, `createdAt`
-- [ ] `AgentRepository` extendendo `JpaRepository`
-- [ ] `AgentService` com métodos `register(AgentRequest)` e `findById(UUID)`
-- [ ] `AgentController` com `POST /agents` e `GET /agents/{id}`
-- [ ] Validação de input com `@Valid`, `@NotBlank`, `@NotNull`
-- [ ] Handler global de erros com `@ControllerAdvice`
-- [ ] Flyway: primeira migration `V1__create_agents_table.sql`
+- [x] Entidade `Agent` com campos base (nome/endpoint/capabilities/status) ✅ 2026-07-09
+- [x] `AgentRepository` extendendo `JpaRepository` ✅ 2026-07-09
+- [x] `AgentService` com CRUD ✅ 2026-07-09
+- [x] `AgentController` com `POST/GET/DELETE /agents` ✅ 2026-07-09
+- [ ] Validação de input com `@Valid`, `@NotBlank`, `@NotNull` — confirmado ausente 2026-07-29
+- [ ] Handler global de erros com `@ControllerAdvice` — confirmado ausente 2026-07-29
+- [x] Flyway: tabela `agents` migrada — via `V2__create_agents_table.sql` (não V1, users ficou V1) ✅
 
 ### O que estudas para conseguir fazer isso
 
@@ -62,13 +62,13 @@ Não estudas por estudar — estudas para desbloquear a próxima tarefa.
 
 ### O que implementas
 
-- [ ] Entidade `Task` com: `id`, `type`, `payload` (JSONB), `priority` (enum), `status` (enum), `assignedAgentId`, `createdAt`, `completedAt`
-- [ ] `TaskRepository` com query: `findByStatus(TaskStatus status)`
-- [ ] `RoutingEngine` — lógica: dado um tipo de task, encontra agente ACTIVE que tenha essa capability e menor carga atual
-- [ ] `TaskService.submit(TaskRequest)` — persiste task, chama routing engine, atualiza `assignedAgentId`
-- [ ] `POST /tasks` e `GET /tasks/{id}`
-- [ ] `GET /tasks?status=PENDING` com `@RequestParam`
-- [ ] Flyway: `V2__create_tasks_table.sql`
+- [x] Entidade `Task` com campos base ✅ 2026-07-20
+- [ ] `TaskRepository` com query: `findByStatus(TaskStatus status)` — confirmado ausente 2026-07-29
+- [ ] `RoutingEngine` — **núcleo desta fase, confirmado ausente 2026-07-29** — task submetida não é atribuída a nenhum agente ainda
+- [ ] `TaskService.submit(TaskRequest)` com routing — só CRUD existe, sem lógica de routing
+- [x] `POST /tasks` e `GET /tasks/{id}` ✅ 2026-07-20
+- [ ] `GET /tasks?status=PENDING` com `@RequestParam` — confirmado ausente 2026-07-29
+- [x] Flyway: tabela `tasks` migrada — via `V3__create_tasks_executions_tables.sql` ✅
 
 ### O que estudas
 
@@ -137,12 +137,12 @@ Submeter task → execução dispara em background → estado muda de PENDING �
 
 ### O que implementas
 
-- [ ] `POST /auth/register` — cria user com senha hasheada (BCrypt)
+- [x] `POST /auth/register` — cria user com senha hasheada (BCrypt) ✅ confirmado 2026-07-29
 - [x] `POST /auth/login` — retorna JWT ✅ 2026-06-17
 - [x] `JwtFilter` — valida token em cada request ✅ 2026-06-17
-- [ ] Liberar apenas `/auth/**`, `/health/**`, `/actuator/prometheus` sem token
-- [ ] `UserDetails` + `UserDetailsService` customizados
-- [ ] Role-based: `ROLE_ADMIN` pode criar/deletar agentes, `ROLE_USER` pode submeter tasks
+- [x] Liberar `/auth/**`, `/health`, `/health/details` sem token — `/actuator/prometheus` não se aplica ainda (Fase 6 não começou) ✅ confirmado 2026-07-29
+- [ ] `UserDetails` + `UserDetailsService` customizados — confirmado ausente 2026-07-29 (login/register acedem `UserRepository` diretamente, sem passar pela abstração do Spring Security)
+- [ ] Role-based: `ROLE_ADMIN`/`ROLE_USER` — campo `role` existe na entidade `User`, mas nada o aplica ainda (sem `@PreAuthorize`, sem filtro por role) — confirmado ausente 2026-07-29
 
 ### O que estudas
 
