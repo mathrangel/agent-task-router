@@ -1,5 +1,6 @@
 package com.matheus.procurement.task;
 
+import com.matheus.procurement.agent.Agent;
 import com.matheus.procurement.agent.AgentRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,17 +12,17 @@ import java.util.UUID;
 public class TaskService {
     private final TaskRepository taskRepository;
     private final AgentRepository agentRepository;
+    private final RoutingEngine routingEngine;
 
-
-    public TaskService(TaskRepository taskRepository, AgentRepository agentRepository) {
+    public TaskService(TaskRepository taskRepository, AgentRepository agentRepository, RoutingEngine routingEngine) {
         this.taskRepository = taskRepository;
         this.agentRepository = agentRepository;
+        this.routingEngine = routingEngine;
     }
 
     public Task create(Task task) {
-        if(agentRepository.findById(task.getAgentId()).isEmpty()){
-            throw new IllegalArgumentException("Agent not found: " + task.getAgentId());
-        }
+       Optional<Agent> agentOptional = routingEngine.route(task);
+       agentOptional.ifPresent(agent -> task.setAgentId(agent.getId()));
         return taskRepository.save(task);
     }
 

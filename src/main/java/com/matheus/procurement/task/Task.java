@@ -15,7 +15,7 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false,name = "agent_id")
+    @Column(name = "agent_id")
     private UUID agentId;
 
     @Column(nullable = false)
