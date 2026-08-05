@@ -34,6 +34,10 @@ public class TaskService {
         return taskRepository.findById(id);
     }
 
+    public List<Task> findByStatus(TaskStatus status) {
+        return taskRepository.findByStatus(status);
+    }
+
     public void delete(UUID id) {
         taskRepository.deleteById(id);
     }

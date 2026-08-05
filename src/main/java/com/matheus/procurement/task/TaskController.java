@@ -17,7 +17,12 @@ public class TaskController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Task>> getTasks() {
+    public ResponseEntity<List<Task>> getTasks(@RequestParam(required = false)  Optional<TaskStatus> status) {
+        if(status.isPresent()) {
+            List<Task> tasks = taskService.findByStatus(status.get());
+            return ResponseEntity.ok(tasks);
+        }
+
         List<Task> tasks = taskService.findAll();
         return ResponseEntity.ok(tasks);
     }
