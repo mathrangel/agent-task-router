@@ -81,18 +81,20 @@ Já ticketado em `wiki/task-now.md` como JAVA-RT-01. Mesmo escopo, ID canônico 
 
 ---
 
-### 🎫 ATR-202 — Spring State Machine (PENDING→ROUTING→EXECUTING→SUCCESS/FAILED)
-**Tipo:** Story · **Prioridade:** 🟠 High · **Pontos:** 5 · **Status:** 🔲 To Do
+### 🎫 ATR-202 — Spring State Machine (PENDING→RUNNING→COMPLETED/FAILED)
+**Tipo:** Story · **Prioridade:** 🟠 High · **Pontos:** 5 · **Status:** ✅ Done (06/08, commit `0fa2513`) — escopo reduzido, ver nota
 **Bloqueador:** ATR-201
 
-**Descrição:** Configurar Spring State Machine com os 5 estados e transições válidas. Task só pode ir de PENDING→ROUTING (nunca direto pra EXECUTING), e de EXECUTING só pra SUCCESS ou FAILED.
+**Descrição:** Configurar Spring State Machine com as transições válidas do `TaskStatus` real (4 estados: `PENDING, RUNNING, COMPLETED, FAILED` — não os 5 originalmente planejados, `ROUTING`/`EXECUTING` nunca existiram no enum real). Task só pode ir de PENDING→RUNNING, e de RUNNING só pra COMPLETED ou FAILED.
 
 **Acceptance Criteria:**
-- [ ] Config de state machine define as transições válidas
-- [ ] Transição inválida (ex: tentar ir de PENDING direto pra SUCCESS) é rejeitada, não silenciosamente aceita
-- [ ] Estado persistido junto da `Execution`
+- [x] Config de state machine define as transições válidas (`TaskStateMachineConfig`, `TaskEvent`)
+- [~] Transição inválida rejeitada — confirmado pelo comportamento documentado da lib (evento sem transição válida é ignorado silenciosamente, estado não muda), **não coberto por teste automatizado** — pulado por decisão do Matheus (06/08)
+- [ ] Estado persistido junto da `Execution` — **não feito**. A state machine existe mas não está plugada em nenhum lugar do código ainda: nenhum endpoint ou service chama `sendEvent`. Isso é trabalho do ATR-203 (`ExecutionEngine`), que vai efetivamente disparar as transições.
 
-**Prova de entendimento:** Desenhe de memória (papel ou fala) o diagrama de estados completo com as transições permitidas. Por que ROUTING é um estado separado de PENDING, já que os dois "ainda não executaram"?
+**Nota de escopo (06/08):** ticket fechado como "config validada e app sobe limpo com as 3 transições registradas", não como "state machine em uso real". Verificado via `./mvnw compile` + `spring-boot:run` (boot limpo, sem erro `Must have at least one transition`), não via teste unitário ou chamada de API real — ainda não existe caminho de API que dispare um evento.
+
+**Prova de entendimento:** Desenhe de memória (papel ou fala) o diagrama de estados completo com as transições permitidas. O que faz um evento (`TaskEvent`) ser diferente de um estado (`TaskStatus`) na Spring State Machine?
 
 ---
 
