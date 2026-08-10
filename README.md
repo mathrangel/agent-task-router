@@ -72,7 +72,10 @@ this README described one that was never actually built):
 ```
 src/main/java/com/matheus/procurement/
 ├── agent/        Agent entity, repository, service, controller
-├── task/         Task entity, repository, service, controller
+├── task/         Task entity, repository, service, controller,
+│                 TaskStateMachineConfig, TaskEvent
+├── execution/    Execution entity, ExecutionStatus, ExecutionRepository,
+│                 ExecutionEngine
 ├── controller/   AuthController, HealthController
 ├── security/     JwtAuthFilter, JwtTokenProvider
 ├── entity/       User
