@@ -18,9 +18,12 @@ public class ExecutionEngineTest  {
     @Test
     void shouldRunAsynchronously() throws Exception {
         Task task = new Task();
+        task.setType("summarize");
+        task.setPayload("test payload");
+
         String testThreadName = Thread.currentThread().getName();
         CompletableFuture<String> result = executionEngine.execute(task);
-
+        
         String resultTest = result.get();
 
         assertThat(resultTest).isNotEqualTo(testThreadName);

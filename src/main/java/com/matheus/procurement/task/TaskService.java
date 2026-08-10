@@ -2,6 +2,7 @@ package com.matheus.procurement.task;
 
 import com.matheus.procurement.agent.Agent;
 import com.matheus.procurement.agent.AgentRepository;
+import com.matheus.procurement.execution.ExecutionEngine;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,17 +14,27 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final AgentRepository agentRepository;
     private final RoutingEngine routingEngine;
+    private final ExecutionEngine executionEngine;
 
-    public TaskService(TaskRepository taskRepository, AgentRepository agentRepository, RoutingEngine routingEngine) {
+    public TaskService(TaskRepository taskRepository,
+                       AgentRepository agentRepository,
+                       RoutingEngine routingEngine,
+                       ExecutionEngine executionEngine) {
         this.taskRepository = taskRepository;
         this.agentRepository = agentRepository;
         this.routingEngine = routingEngine;
+        this.executionEngine = executionEngine;
     }
 
     public Task create(Task task) {
        Optional<Agent> agentOptional = routingEngine.route(task);
        agentOptional.ifPresent(agent -> task.setAgentId(agent.getId()));
-        return taskRepository.save(task);
+        Task savedTask = taskRepository.save(task);
+        if(savedTask.getAgentId() != null) {
+            executionEngine.execute(savedTask);
+        }
+
+        return savedTask;
     }
 
     public List<Task> findAll() {
